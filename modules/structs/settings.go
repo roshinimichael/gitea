@@ -41,6 +41,8 @@ type GeneralAPISettings struct {
 	DefaultMaxBlobSize int64 `json:"default_max_blob_size"`
 	// DefaultMaxResponseSize is the default maximum response size
 	DefaultMaxResponseSize int64 `json:"default_max_response_size"`
+	// EnableSwagger indicates whether the Swagger UI is enabled on this instance
+	EnableSwagger bool `json:"enable_swagger"`
 }
 
 // GeneralAttachmentSettings contains global Attachment settings exposed by API
