@@ -1,0 +1,22 @@
+# Skyramp Workspace Configuration
+workspace:
+  repoName: roshinimichael/gitea
+  repoUrl: https://github.com/roshinimichael/gitea
+metadata:
+  schemaVersion: v1
+  executorVersion: v1.3.29
+  createdAt: "2026-06-25T18:09:54.660Z"
+  updatedAt: "2026-06-25T18:09:54.667Z"
+services:
+  - serviceName: gitea-backend
+    language: typescript
+    framework: playwright
+    testDirectory: tests/e2e
+    api:
+      schemaPath: http://localhost:3000/swagger.v1.json
+      authType: bearer
+      baseUrl: http://localhost:3000
+    runtimeDetails:
+      serverStartCommand: docker compose -f .skyramp/sut/docker-compose.testbot.yml --project-directory . up -d gitea
+      runtime: docker
+      dockerNetwork: gitea_default
