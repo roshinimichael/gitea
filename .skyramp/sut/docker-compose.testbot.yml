@@ -1,0 +1,27 @@
+services:
+  gitea:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      USER: git
+      SECRET_KEY: testbot-secret-key-for-ci-testing-only
+      DB_TYPE: sqlite3
+      APP_NAME: "Gitea Testbot"
+      ROOT_URL: "http://localhost:3000/"
+      HTTP_PORT: "3000"
+      DISABLE_REGISTRATION: "false"
+      DISABLE_SSH: "true"
+    volumes:
+      - gitea-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3000/api/v1/version"]
+      interval: 10s
+      timeout: 5s
+      retries: 36
+      start_period: 60s
+
+volumes:
+  gitea-data:
