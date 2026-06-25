@@ -127,11 +127,24 @@ func Search(ctx *context.APIContext) {
 	//   in: query
 	//   description: page size of results
 	//   type: integer
+	// - name: owner_type
+	//   in: query
+	//   description: filter results by owner kind, either "user" or "org".
+	//                Omitting the parameter preserves existing behavior (no kind filter).
+	//   type: string
 	// responses:
 	//   "200":
 	//     "$ref": "#/responses/SearchResults"
 	//   "422":
 	//     "$ref": "#/responses/validationError"
+
+	ownerType := strings.ToLower(strings.TrimSpace(ctx.FormString("owner_type")))
+	switch ownerType {
+	case "", "user", "org":
+	default:
+		ctx.APIError(http.StatusUnprocessableEntity, "invalid owner_type, must be 'user' or 'org'")
+		return
+	}
 
 	private := ctx.IsSigned && (ctx.FormString("private") == "" || ctx.FormBool("private"))
 
@@ -198,6 +211,25 @@ func Search(ctx *context.APIContext) {
 			Error: err.Error(),
 		})
 		return
+	}
+
+	if ownerType != "" {
+		filtered := make([]*repo_model.Repository, 0, len(repos))
+		for _, r := range repos {
+			if err = r.LoadOwner(ctx); err != nil {
+				ctx.JSON(http.StatusInternalServerError, api.SearchError{
+					OK:    false,
+					Error: err.Error(),
+				})
+				return
+			}
+			isOrg := r.Owner.IsOrganization()
+			if (ownerType == "org" && isOrg) || (ownerType == "user" && !isOrg) {
+				filtered = append(filtered, r)
+			}
+		}
+		repos = filtered
+		count = int64(len(filtered))
 	}
 
 	results := make([]*api.Repository, len(repos))
