@@ -81,6 +81,15 @@ type ServerVersion struct {
 	Version string `json:"version"`
 }
 
+// MiscHealth is the response payload for GET /misc/health.
+// swagger:response MiscHealth
+type MiscHealth struct {
+	// Status is a coarse liveness indicator ("ok" when the API process is up).
+	Status string `json:"status"`
+	// UptimeSeconds is how long the API process has been running, in whole seconds.
+	UptimeSeconds int64 `json:"uptime_seconds"`
+}
+
 // GitignoreTemplateInfo name and text of a gitignore template
 type GitignoreTemplateInfo struct {
 	// Name is the name of the gitignore template

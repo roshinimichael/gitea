@@ -1021,6 +1021,7 @@ func Routes() *web.Router {
 		// Misc (public accessible)
 		m.Group("", func() {
 			m.Get("/version", misc.Version)
+			m.Get("/misc/health", misc.Health)
 			m.Get("/signing-key.gpg", misc.SigningKeyGPG)
 			m.Get("/signing-key.pub", misc.SigningKeySSH)
 			m.Post("/markup", reqToken(), bind(api.MarkupOption{}), misc.Markup)
