@@ -51,4 +51,3 @@ jobs:
           targetTeardownCommand: 'docker compose -f .skyramp/sut/docker-compose.testbot.yml --project-directory . down -v'
           authTokenCommand: 'bash .skyramp/sut/get-auth-token.sh'
           uiCredentials: 'testbot-admin:testbotAdmin123'
-
